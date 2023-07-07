@@ -11,7 +11,7 @@ const CompletionDateBadge = ({ completionDate }) => {
 
   return (
     <span className="badge bg-success date-badge">
-      {formatDate(completionDate)}
+      {formatDate(completionDate) + completionDate? 'bleble' : ''}
     </span>
   );
 };

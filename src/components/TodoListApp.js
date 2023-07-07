@@ -14,7 +14,7 @@ const TodoListApp = () => {
     'The Black Company', 'The Wheel of Time', 'The Stormlight Archive', 'The Malazan Book of the Fallen',
     'The Sword of Shannara', 'The Earthsea Cycle', 'The Kingkiller Chronicle', 'The First Law Trilogy', 'The Mistborn Trilogy',
     'The Farseer Trilogy'
-  ];  
+  ];
 
   const sampleTaskAuthors = [
     'J.R.R. Tolkien', 'C.S. Lewis', 'Lewis Carroll', 'C.S. Lewis',
@@ -42,7 +42,7 @@ const TodoListApp = () => {
     return tasks;
   };
 
-  const [taskModel, setTaskModel] = useState(new TaskModel(generateSampleTasks()));
+  const [taskModel, setTaskModel] = useState(new TaskModel());
   const [filterCriteria, setFilterCriteria] = useState({
     showCompleted: true,
     selectedProject: '',
@@ -67,10 +67,10 @@ const TodoListApp = () => {
   }, [filterCriteria]);
 
   const handleFilterChange = (updatedCriteria) => {
-    localStorage.setItem('filterCriteria', JSON.stringify({...filterCriteria, ...updatedCriteria}));
+    localStorage.setItem('filterCriteria', JSON.stringify({ ...filterCriteria, ...updatedCriteria }));
     setFilterCriteria((prevCriteria) => ({ ...prevCriteria, ...updatedCriteria }));
   };
-  
+
 
   const handleTagClick = (tag) => {
     setFilterCriteria((prevCriteria) => ({
@@ -78,7 +78,12 @@ const TodoListApp = () => {
       selectedTag: prevCriteria.selectedTag === tag ? '' : tag,
     }));
   };
-  
+
+  const removeTask = (taskId) => {
+    const updatedTasks = taskModel.tasks.filter((task) => task.id !== taskId);
+    setTaskModel(new TaskModel(updatedTasks));
+  };
+
 
   const getFilteredTasks = () => {
     const { showCompleted, selectedProject, searchText, selectedTag } = filterCriteria;
@@ -95,10 +100,14 @@ const TodoListApp = () => {
     return filteredTasks;
   };
 
+  useEffect(() => {
+    document.title = 'TooDoo'; // Change page title
+  }, []);
+
   return (
     <div className="card">
       <div className="card-body">
-        <h2 className="card-title mb-4">Todo List</h2>
+        <h1 className="card-title mb-4  text-center">TooDoo</h1>
         <Filtering
           filterCriteria={filterCriteria}
           taskModel={taskModel}
@@ -119,6 +128,7 @@ const TodoListApp = () => {
                         task={task}
                         provided={provided}
                         completeTask={completeTask}
+                        removeTask={removeTask}
                         onTagClick={handleTagClick}
                       />
                     )}

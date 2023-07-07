@@ -1,7 +1,7 @@
 class TaskModel {
   constructor(tasks) {
     const storedTasks = localStorage.getItem('tasks');
-    this.tasks = storedTasks ? JSON.parse(storedTasks, this.dateReviver) : tasks;
+    this.tasks = tasks ? [...tasks] : JSON.parse(storedTasks, this.dateReviver);
     this.saveTasks();
   }
 

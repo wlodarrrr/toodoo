@@ -1,49 +1,60 @@
 import React from 'react';
 import Checkbox from './Checkbox';
-import Summary from './Summary';
 import DateBadge from './DateBadge';
 import CompletionDateBadge from './CompletionDateBadge';
-import TagsContainer from './TagsContainer';
-import './Task.css';
+import TagBadge from './TagBadge.js'
+import ProjectBadge from './ProjectBadge.js'
 
-const Task = ({ task, provided, completeTask, onTagClick }) => {
-  const handleCheckboxChange = (isChecked) => {
-    const completionDate = isChecked ? new Date() : null;
-    completeTask(task.id, completionDate);
-  };
-
-  const handleTagClick = (tag) => {
-    onTagClick(tag);
-  };
-
+const Task = ({ task, provided, completeTask, removeTask, onTagClick }) => {
   return (
-    <li
+    <div
+      ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}
-      ref={provided.innerRef}
-      className="list-group-item d-flex flex-column align-items-start"
     >
-      <div className="task-container">
-        <div className="form-check d-flex" style={{ width: '100%' }}>
-          <Checkbox
-            checked={task.completionDate !== null}
-            onChange={handleCheckboxChange}
-          />
-          <div className="summary">
-            <Summary summary={task.summary} />
+      <li className="list-group-item">
+
+        <div className='d-flex flex-row flex-fill gap-2'>
+          <div className='d-flex flex-column justify-content-around'>
+
+            <Checkbox checked={task.completionDate !== null} onChange={isChecked => completeTask(task.id, isChecked ? new Date() : null)} />
+
           </div>
-          {task.completionDate && (
-            <div className="completion-date-badge">
+
+          <div className='d-flex flex-column flex-grow-1 gap-2'>
+            <div className='d-flex flex-row gap-2'>
+
+              <label className="form-check-label flex-grow-1">{task.summary}</label>
+
               <CompletionDateBadge completionDate={task.completionDate} />
+
+              <DateBadge date={task.creationDate} />
+
             </div>
-          )}
-          <div className="date-badge">
-            <DateBadge date={task.creationDate} />
+
+            <div className='d-flex flex-row gap-2'>
+              <div className='d-flex flex-row flex-grow-1'>
+
+                {task.tags.map(tag => {
+                  return <TagBadge key={tag} tag={tag} onClick={() => onTagClick(tag)} />
+                })}
+              </div>
+
+              <ProjectBadge project={task.project} />
+
+            </div>
+          </div>
+
+          <div className='d-flex flex-column p-2 justify-content-around'>
+
+            <button className="btn btn-outline-danger btn-sm" onClick={() => removeTask(task.id)}>
+              X
+            </button>
+
           </div>
         </div>
-      </div>
-      <TagsContainer tags={task.tags} project={task.project} onTagClick={handleTagClick} />
-    </li>
+      </li>
+    </div>
   );
 };
 
