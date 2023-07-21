@@ -1,11 +1,14 @@
 import React from 'react';
-import Checkbox from './Checkbox';
-import DateBadge from './DateBadge';
-import CompletionDateBadge from './CompletionDateBadge';
-import TagBadge from './TagBadge.js'
-import ProjectBadge from './ProjectBadge.js'
 
-const Task = ({ task, provided, completeTask, removeTask, onTagClick }) => {
+function formatDate(date) {
+  if (date instanceof Date && !isNaN(date)) {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  }
+  return '';
+};
+
+const Task = ({ task, provided, completeTask, removeTask, onTagClick, onProjectClick }) => {
   return (
     <div
       ref={provided.innerRef}
@@ -14,47 +17,42 @@ const Task = ({ task, provided, completeTask, removeTask, onTagClick }) => {
     >
       <li className="list-group-item">
 
-        <div className='d-flex flex-row flex-fill gap-2'>
-          <div className='d-flex flex-column justify-content-around'>
+        <div className='d-flex flex-row flex-fill gap-2 justify-content-between align-items-center'>
 
-            <Checkbox checked={task.completionDate !== null} onChange={isChecked => completeTask(task.id, isChecked ? new Date() : null)} />
+          <input
+            className="form-check-input"
+            type="checkbox"
+            defaultChecked={task.completionDate !== null}
+            onChange={e => completeTask(task.id, e.target.checked ? new Date() : null)}>
+          </input>
 
-          </div>
+          <span className="badge bg-success date-badge">{formatDate(task.completionDate)}</span>
 
-          <div className='d-flex flex-column flex-grow-1 gap-2'>
-            <div className='d-flex flex-row gap-2'>
+          <label className="form-check-label flex-grow-1">{task.summary}</label>
 
-              <label className="form-check-label flex-grow-1">{task.summary}</label>
+          {task.tags.map(tag => {
+            return <span
+              key={tag}
+              tag={tag}
+              role ="button"
+              className="badge bg-info  "
+              onClick={() => onTagClick(tag)}>
+              {'@' + tag}
+            </span>
+          })}
 
-              <CompletionDateBadge completionDate={task.completionDate} />
+          <span
+            className="badge bg-secondary"
+            role ="button"
+            onClick={() => onProjectClick(task.project)}>
+            {(task.project? '#' : '') + task.project}
+          </span>
 
-              <DateBadge date={task.creationDate} />
+          <button className="btn text-danger btn-sm" onClick={() => removeTask(task.id)}>X</button>
 
-            </div>
-
-            <div className='d-flex flex-row gap-2'>
-              <div className='d-flex flex-row flex-grow-1'>
-
-                {task.tags.map(tag => {
-                  return <TagBadge key={tag} tag={tag} onClick={() => onTagClick(tag)} />
-                })}
-              </div>
-
-              <ProjectBadge project={task.project} />
-
-            </div>
-          </div>
-
-          <div className='d-flex flex-column p-2 justify-content-around'>
-
-            <button className="btn btn-outline-danger btn-sm" onClick={() => removeTask(task.id)}>
-              X
-            </button>
-
-          </div>
         </div>
-      </li>
-    </div>
+      </li >
+    </div >
   );
 };
 
