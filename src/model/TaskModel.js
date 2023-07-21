@@ -1,7 +1,8 @@
 class TaskModel {
   constructor(tasks) {
     const storedTasks = localStorage.getItem('tasks');
-    this.tasks = tasks ? [...tasks] : JSON.parse(storedTasks, this.dateReviver);
+    const parsedTasks = storedTasks ? JSON.parse(storedTasks, this.dateReviver) : [];
+    this.tasks = tasks ? [...tasks] : parsedTasks;
     this.saveTasks();
   }
 
@@ -16,8 +17,21 @@ class TaskModel {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 
+  addTask(summary, project, tags) {
+    const updatedTasks = [...this.tasks, 
+      { 
+        id: crypto.randomUUID(), 
+        summary: summary, 
+        project: project, 
+        tags: tags, 
+        creationDate: new Date(),
+        completionDate: null  
+      }];
+    this.tasks = updatedTasks;
+    this.saveTasks();
+  }
+
   reorderTasks(sourceIndex, destinationIndex) {
-    console.log(this.tasks);
     const updatedTasks = [...this.tasks];
     const [draggedTask] = updatedTasks.splice(sourceIndex, 1);
     updatedTasks.splice(destinationIndex, 0, draggedTask);
@@ -30,7 +44,7 @@ class TaskModel {
       if (task.id === taskId) {
         return {
           ...task,
-          completionDate: completionDate ? completionDate.toISOString().slice(0, 10) : null,
+          completionDate: completionDate,
         };
       }
       return task;
