@@ -36,6 +36,16 @@ class TaskModel {
     const [draggedTask] = updatedTasks.splice(sourceIndex, 1);
     updatedTasks.splice(destinationIndex, 0, draggedTask);
     this.tasks = updatedTasks;
+    const arr = [1, 2, 8, 4, 5];
+const toMove = arr[2];
+ 
+const newArr = [
+  ...arr.slice(0, 2),
+  ...arr.slice(3),
+     toMove
+];
+
+
     this.saveTasks();
   }
 
