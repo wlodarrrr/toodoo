@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const Filtering = ({ onFilterChange, filterCriteria, onTagClick, onProjectClick }) => {
-  const [showCompleted, setShowCompleted] = useState(filterCriteria.showCompleted);
+const Filtering = (props) => {
+  const { onFilterChange, filterCriteria } = props;
+
+  const [showCompleted, setShowCompleted] = useState(
+    filterCriteria.showCompleted
+  );
   const [searchText, setSearchText] = useState(filterCriteria.searchText);
 
   const handleShowCompletedChange = (e) => {
@@ -18,10 +22,9 @@ const Filtering = ({ onFilterChange, filterCriteria, onTagClick, onProjectClick 
 
   return (
     <div className="d-flex flex-column align-items- gap-2">
-
-      <div className='flex-row'>
+      <div className="flex-row">
         <input
-          className=' form-check-inline '
+          className=" form-check-inline "
           type="checkbox"
           checked={showCompleted}
           onChange={handleShowCompletedChange}
@@ -33,31 +36,13 @@ const Filtering = ({ onFilterChange, filterCriteria, onTagClick, onProjectClick 
       </div>
       <div className="d-flex flex-row flex-grow-1">
         <input
-          placeholder='Type to search...'
+          placeholder="Type to search..."
           type="text"
           className="form-control"
           id="summaryFilter"
           value={searchText}
           onChange={handleSearchChange}
         />
-
-      </div>
-      <div className='d-flex flex-row gap-2'>
-        {filterCriteria.selectedTags.map((tag) => (
-          <span
-            key={tag}
-            className="badge bg-primary"
-            role="button"
-            onClick={() => onTagClick(tag)}>
-            {'@' + tag}
-          </span>
-        ))}
-        <span
-          className="badge bg-success"
-          role="button"
-          onClick={() => onProjectClick(filterCriteria.selectedProject)}>
-          {filterCriteria.selectedProject ? '#' + filterCriteria.selectedProject : ''}
-        </span>
       </div>
     </div>
   );
