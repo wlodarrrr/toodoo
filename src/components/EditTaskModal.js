@@ -1,10 +1,9 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState } from "react";
+import { convertStringToTags } from "../utils/TagsConverter";
 
 const EditTaskModal = ({ task, onSave }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
-  const innerRef = useRef();
-  useEffect(() => innerRef.current && innerRef.current.focus());
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -13,10 +12,7 @@ const EditTaskModal = ({ task, onSave }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    console.log(value);
-    const targetValue = name === "tags" ? value.split(" ") : value;
-
-    setEditedTask({ ...editedTask, [name]: targetValue });
+    setEditedTask({ ...editedTask, [name]: name === 'tags' ? convertStringToTags(value) : value });
   };
 
   const handleSave = () => {
@@ -72,7 +68,7 @@ const EditTaskModal = ({ task, onSave }) => {
                       value={editedTask.summary}
                       onChange={handleInputChange}
                       onKeyUp={handleKeyPress}
-                      ref={innerRef}
+                      autoFocus={true}
                     />
                   </div>
                   <div className="form-group">
@@ -94,7 +90,7 @@ const EditTaskModal = ({ task, onSave }) => {
                       className="form-control"
                       id="tags"
                       name="tags"
-                      value={editedTask.tags.join(" ")}
+                      value={editedTask.tags.length ? editedTask.tags.join(" ") : ''}
                       onChange={handleInputChange}
                       onKeyUp={handleKeyPress}
                     />

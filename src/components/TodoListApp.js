@@ -1,57 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import Task from "./Task";
-import Filtering from "./Filtering";
-import TaskAdder from "./TaskAdder";
-import convertStringToTask from "../StringToTaskConverter";
+import React, { useEffect, useState } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import Task from './Task';
+import Filtering from './Filtering';
+import TaskAdder from './TaskAdder';
+import { convertStringToTask } from '../utils/TaskConverter';
+import { load, persist } from '../utils/Persistence';
+import { getAllProjects, getAllTags, getFilteredTasks } from '../utils/TaskListUtils';
 
 const TodoListApp = () => {
-  const [tasks, setTasks] = useState(() => {
-    const retrieved = localStorage.getItem("tasks");
-    return retrieved ? JSON.parse(retrieved, dateRetriever) : [];
-  });
+  const [tasks, setTasks] = useState(() => load());
   const [filterCriteria, setFilterCriteria] = useState({
     showCompleted: false,
-    selectedProject: "",
+    selectedProject: '',
     selectedTags: [],
-    searchText: "",
+    searchText: '',
   });
 
-  function dateRetriever(key, value) {
-    if (typeof value === "string" && key.includes("Date")) {
-      return new Date(value);
-    }
-    return value;
-  }
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+  useEffect(() => persist(tasks), [tasks]);
 
   const handleDragEnd = (result) => {
+    console.log(result);
     if (!result.destination) return;
     const { source, destination } = result;
-    const updatedTasks = [...this.tasks];
-    const [draggedTask] = updatedTasks.splice(source.ndex, 1);
+    const updatedTasks = [...tasks];
+    const [draggedTask] = updatedTasks.splice(source.index, 1);
     updatedTasks.splice(destination.index, 0, draggedTask);
     setTasks(updatedTasks);
   };
 
-  const completeTask = (taskId, completionDate) => {
-    tasks.filter((task) => task.id === taskId).completionDate = completionDate;
+  const completeTask = (taskId, completed) => {
+    tasks.filter((task) => task.id === taskId)[0].completionDate = completed ? new Date() : null;
     setTasks([...tasks]);
   };
 
   const addTask = (message) => {
     const task = convertStringToTask(message);
-    console.log(task);
     setTasks([...tasks, task]);
   };
 
   const editTask = (editedTask) => {
-    const updatedTasks = tasks.filter((task) => task.id !== editedTask.id);
-    updatedTasks.push(editedTask);
-    setTasks(updatedTasks);
+    const index = tasks.findIndex((task) => task.id === editedTask.id);
+    tasks[index] = editedTask;
+    setTasks([...tasks]);
   };
 
   const removeTask = (taskId) => {
@@ -70,9 +60,7 @@ const TodoListApp = () => {
       let prevTags = prevCriteria.selectedTags;
       return {
         ...prevCriteria,
-        selectedTags: prevTags.includes(tag)
-          ? prevTags.filter((t) => t !== tag)
-          : [...prevTags, tag],
+        selectedTags: prevTags.includes(tag) ? prevTags.filter((t) => t !== tag) : [...prevTags, tag],
       };
     });
   };
@@ -82,44 +70,10 @@ const TodoListApp = () => {
       let prevProject = prevCriteria.selectedProject;
       return {
         ...prevCriteria,
-        selectedProject: project === prevProject ? "" : project,
+        selectedProject: project === prevProject ? '' : project,
       };
     });
   };
-
-  const getFilteredTasks = () => {
-    const { showCompleted, selectedProject, searchText, selectedTags } =
-      filterCriteria;
-
-    const filteredTasks = tasks.filter((task) => {
-      const isCompletionMatch = showCompleted || task.completionDate === null;
-      const isProjectMatch =
-        selectedProject === "" || selectedProject === task.project;
-      const isSummaryMatch = task.summary
-        .toLowerCase()
-        .includes(searchText.toLowerCase());
-      const isTagsMatch = selectedTags.every((tag) => task.tags.includes(tag));
-
-      return (
-        isCompletionMatch && isProjectMatch && isSummaryMatch && isTagsMatch
-      );
-    });
-
-    return filteredTasks;
-  };
-
-  const allTags = Array.from(
-    new Set(tasks.flatMap((task) => task.tags).sort())
-  );
-
-  const allProjects = Array.from(
-    new Set(
-      tasks
-        .filter((task) => task.project !== "")
-        .flatMap((task) => task.project)
-        .sort()
-    )
-  );
 
   return (
     <div className="d-flex flex-row h-100 w-100 gap-2">
@@ -128,18 +82,16 @@ const TodoListApp = () => {
         <div className="card-body">
           <h5>Tags</h5>
           <ul className=" list-group gap-2">
-            {allTags.map((tag, index) => (
+            {getAllTags(tasks).map((tag, index) => (
               <li
                 key={index}
                 className={
-                  "badge btn bg-primary" +
-                  (filterCriteria.selectedTags.includes(tag)
-                    ? " border border-light border-2"
-                    : "")
+                  'badge btn bg-primary' +
+                  (filterCriteria.selectedTags.includes(tag) ? ' border border-light border-2' : '')
                 }
                 onClick={() => handleTagClick(tag)}
               >
-                {"@" + tag}
+                {'@' + tag}
               </li>
             ))}
           </ul>
@@ -151,23 +103,22 @@ const TodoListApp = () => {
         <div className="card-body">
           <h5>Projects</h5>
           <ul className="list-group gap-2">
-            {allProjects.map((project, index) => (
+            {getAllProjects(tasks).map((project, index) => (
               <li
                 key={index}
                 className={
-                  "badge btn bg-success " +
-                  (filterCriteria.selectedProject === project
-                    ? " border border-light border-2"
-                    : "")
+                  'badge btn bg-success ' +
+                  (filterCriteria.selectedProject === project ? ' border border-light border-2' : '')
                 }
                 onClick={() => handleProjectClick(project)}
               >
-                {"#" + project}
+                {'#' + project}
               </li>
             ))}
           </ul>
         </div>
       </div>
+      
 
       {/* Right column - Tasks */}
       <div className="flex-column card mb-3 flex-grow-1 overflow-y-scroll">
@@ -190,12 +141,8 @@ const TodoListApp = () => {
                     ref={provided.innerRef}
                     className="list-group list-group-flush gap-1"
                   >
-                    {getFilteredTasks().map((task, index) => (
-                      <Draggable
-                        key={task.id}
-                        draggableId={task.id.toString()}
-                        index={index}
-                      >
+                    {getFilteredTasks(tasks, filterCriteria).map((task, index) => (
+                      <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
                         {(provided) => (
                           <Task
                             task={task}

@@ -1,15 +1,7 @@
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "./Task.css";
+import "./hovering.css";
 import EditTaskModal from "./EditTaskModal";
-
-function formatDate(date) {
-  if (date instanceof Date && !isNaN(date)) {
-    const options = { day: "2-digit", month: "short", year: "numeric" };
-    return date.toLocaleDateString(undefined, options);
-  }
-  return "";
-}
 
 const Task = ({
   task,
@@ -20,6 +12,15 @@ const Task = ({
   onProjectClick,
   onEdit
 }) => {
+
+  function formatDate(date) {
+    if (date instanceof Date && !isNaN(date)) {
+      const options = { day: "2-digit", month: "short", year: "numeric" };
+      return date.toLocaleDateString(undefined, options);
+    }
+    return "";
+  }
+
   return (
     <div
       ref={provided.innerRef}
@@ -32,9 +33,7 @@ const Task = ({
             className="form-check-inline bg-primary"
             type="checkbox"
             defaultChecked={task.completionDate !== null}
-            onChange={(e) =>
-              completeTask(task.id, e.target.checked ? new Date() : null)
-            }
+            onChange={(e) => completeTask(task.id, e.target.checked)}
           ></input>
 
           <span className="badge bg-success">

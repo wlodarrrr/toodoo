@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import './hovering.css'
 
 const TaskAdder = ({ onAddTask }) => {
   const [taskSummary, setTaskSummary] = useState("");
@@ -23,7 +24,7 @@ const TaskAdder = ({ onAddTask }) => {
   };
 
   return (
-    <div className="d-flex flex-row gap-2">
+    <div className="d-flex flex-row gap-2 align-items-center">
       <input
         type="text"
         className="form-control flex-grow-1 me-2"
@@ -35,8 +36,8 @@ const TaskAdder = ({ onAddTask }) => {
       />
 
       <i
-        className="bi bi-plus-circle-fill text-primary"
-        style={{ fontSize: 30 }}
+        className="bi bi-plus-circle-fill add-icon flex-shrink-1"
+        style={{ fontSize: 40 }}
         onClick={handleAddTask}
       ></i>
     </div>

@@ -1,0 +1,18 @@
+.edit-icon:hover {
+  cursor: pointer;
+  color: var(--bs-emphasis-color);
+}
+
+.delete-icon:hover {
+  cursor: pointer;
+  color: var(--bs-danger);
+}
+
+.add-icon:hover {
+  cursor: pointer;
+  color: var(--bs-emphasis-color);
+}
+
+.add-icon {
+  color: var(--bs-primary);
+}
