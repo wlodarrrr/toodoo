@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { convertStringToTags } from "../utils/TagsConverter";
+import React, { useState } from 'react';
+import { convertStringToTags } from './../../../utils/TagsConverter';
 
 const EditTaskModal = ({ task, onSave }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +21,9 @@ const EditTaskModal = ({ task, onSave }) => {
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       handleSave();
-    } else if (event.key === "Escape") {
+    } else if (event.key === 'Escape') {
       toggleModal();
     }
   };
@@ -31,29 +31,16 @@ const EditTaskModal = ({ task, onSave }) => {
   return (
     <>
       {/* Button to open the modal */}
-      <span
-        className=" edit-icon bi bi-pencil-square"
-        style={{ fontSize: 20 }}
-        onClick={toggleModal}
-      ></span>
+      <span className=" edit-icon bi bi-pencil-square" style={{ fontSize: 20 }} onClick={toggleModal}></span>
 
       {/* Modal */}
       {isOpen && (
-        <div
-          className="modal"
-          tabIndex="-1"
-          role="dialog"
-          style={{ display: "block" }}
-        >
+        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Edit Task</h5>
-                <i
-                  className=" delete-icon bi bi-x-square"
-                  style={{ fontSize: 20 }}
-                  onClick={toggleModal}
-                ></i>
+                <i className=" delete-icon bi bi-x-square" style={{ fontSize: 20 }} onClick={toggleModal}></i>
               </div>
               <div className="modal-body">
                 {/* Form to edit the task */}
@@ -90,7 +77,7 @@ const EditTaskModal = ({ task, onSave }) => {
                       className="form-control"
                       id="tags"
                       name="tags"
-                      value={editedTask.tags.length ? editedTask.tags.join(" ") : ''}
+                      value={editedTask.tags.length ? editedTask.tags.join(' ') : ''}
                       onChange={handleInputChange}
                       onKeyUp={handleKeyPress}
                     />
@@ -98,18 +85,10 @@ const EditTaskModal = ({ task, onSave }) => {
                 </form>
               </div>
               <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={toggleModal}
-                >
+                <button type="button" className="btn btn-secondary" onClick={toggleModal}>
                   Close
                 </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleSave}
-                >
+                <button type="button" className="btn btn-primary" onClick={handleSave}>
                   Save Changes
                 </button>
               </div>
