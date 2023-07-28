@@ -1,29 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import TagsPanel from './tags/TagsPanel';
-import ProjectsPanel from './projects/ProjectsPanel';
-import FilterableTasksPanel from './tasks/FilterableTasksPanel';
-import { load, persist } from '../utils/Persistence';
-import { convertStringToTask } from '../utils/TaskConverter';
-import { getAllTags, getFilteredTasks, getAllProjects } from '../utils/TaskListUtils';
-import Task from './tasks/components/Task';
+import React, { useState, useEffect } from "react";
+import TagsPanel from "./tags/TagsPanel";
+import ProjectsPanel from "./projects/ProjectsPanel";
+import FilterableTasksPanel from "./tasks/FilterableTasksPanel";
+import { load, persist } from "../utils/Persistence";
+import { convertStringToTask } from "../utils/TaskConverter";
+import { getAllTags, getFilteredTasks, getAllProjects, isTaskFiltered as isTaskVisible } from "../utils/TaskListUtils";
+import Task from "./tasks/components/Task";
 
 export default function App() {
   const [tasks, setTasks] = useState(() => load());
   const [filterCriteria, setFilterCriteria] = useState({
     showCompleted: false,
-    selectedProject: '',
+    selectedProject: "",
     selectedTags: [],
-    searchText: '',
+    searchText: "",
   });
 
   useEffect(() => persist(tasks), [tasks]);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
+
     const { source, destination } = result;
+
+    console.log(source);
+    console.log(destination);
     const updatedTasks = [...tasks];
     const [draggedTask] = updatedTasks.splice(source.index, 1);
     updatedTasks.splice(destination.index, 0, draggedTask);
+    console.log(tasks);
+    console.log(updatedTasks);
     setTasks(updatedTasks);
   };
 
@@ -69,13 +75,13 @@ export default function App() {
       let prevProject = prevCriteria.selectedProject;
       return {
         ...prevCriteria,
-        selectedProject: project === prevProject ? '' : project,
+        selectedProject: project === prevProject ? "" : project,
       };
     });
   };
 
   const getTaskViews = () => {
-    return getFilteredTasks(tasks, filterCriteria).flatMap((task, index) => (
+    return tasks.flatMap((task, index) => (
       <Task
         key={index}
         task={task}
@@ -84,6 +90,7 @@ export default function App() {
         onTagClick={handleTagClick}
         onProjectClick={handleProjectClick}
         onEdit={editTask}
+        visible={isTaskVisible(task, filterCriteria)}
       />
     ));
   };

@@ -1,7 +1,6 @@
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 export default function DraggableTaskList({ handleDragEnd, taskViews }) {
-  console.log(taskViews);
   return (
     <DragDropContext className="m-2" onDragEnd={handleDragEnd}>
       <Droppable droppableId="tasks">

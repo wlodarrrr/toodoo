@@ -1,19 +1,19 @@
-import React from 'react';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import './../../styles.css';
-import EditTaskModal from './EditTaskModal';
+import React from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "./../../styles.css";
+import EditTaskModal from "./EditTaskModal";
 
-const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEdit }) => {
-  function formatDate(date) {
-    if (date instanceof Date && !isNaN(date)) {
-      const options = { day: '2-digit', month: 'short', year: 'numeric' };
-      return date.toLocaleDateString(undefined, options);
-    }
-    return '';
+function formatDate(date) {
+  if (date instanceof Date && !isNaN(date)) {
+    const options = { day: "2-digit", month: "short", year: "numeric" };
+    return date.toLocaleDateString(undefined, options);
   }
+  return "";
+}
 
+export default function Task({ task, completeTask, removeTask, onTagClick, onProjectClick, onEdit, visible }) {
   return (
-    <li className="border-1 border border-light-subtle rounded px-2 ">
+    <li className={"border-1 border border-light-subtle rounded px-2 " + (visible ? "" : "d-none")}>
       <div className="d-flex flex-row flex-fill gap-2 justify-content-between align-items-center">
         <input
           className="form-check-inline bg-primary"
@@ -26,8 +26,10 @@ const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEd
 
         <label className="form-check-label">{task.summary}</label>
 
-        {task.link && <a className="bi bi-box-arrow-up-right link flex-grow-1" href={task.link} target="_blank"></a>}
-        {!task.link && <div className="flex-grow-1"></div>}
+        {task.link && (
+          <a className="bi bi-box-arrow-up-right link" href={task.link} target="_blank" rel="noreferrer"> </a>
+        )}
+        <div className="flex-grow-1"></div>
 
         {task.tags.map((tag) => {
           return (
@@ -38,7 +40,7 @@ const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEd
               className="badge btn bg-primary rounded-pill"
               onClick={() => onTagClick(tag)}
             >
-              {'@' + tag}
+              {"@" + tag}
             </span>
           );
         })}
@@ -63,6 +65,4 @@ const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEd
       </div>
     </li>
   );
-};
-
-export default Task;
+}

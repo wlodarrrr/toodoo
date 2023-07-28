@@ -10,7 +10,6 @@ export default function FilterableTasksPanel({
   handleFilterChange,
   addTask,
 }) {
-  console.log(taskViews);
   return (
     <div className="card h-100 ">
     <div className="card-header text-center">Tasks</div>
