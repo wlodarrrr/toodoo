@@ -1,8 +1,8 @@
 export default function TagsPanel({ tags, selectedTags, handleTagClick }) {
   return (
     <div className="card">
+      <div className="card-header text-center">Tags</div>
       <div className=" card-body ">
-        <h5 className="text-center">Projects</h5>
 
         <ul className=" list-group gap-2">
           {tags.map((tag, index) => (

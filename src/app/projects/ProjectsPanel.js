@@ -1,9 +1,8 @@
 export default function ProjectsPanel({ projects, selectedProject, handleProjectClick }) {
   return (
     <div className="card">
+    <div className="card-header text-center">Projects</div>
       <div className=" card-body ">
-        <h5 className="text-center">Projects</h5>
-
         <ul className=" list-group gap-2">
           {projects.map((project, index) => (
             <li

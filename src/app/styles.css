@@ -16,3 +16,8 @@
 .add-icon {
   color: var(--bs-primary);
 }
+
+.link:hover{
+  cursor: pointer;
+  color: var(--bs-emphasis-color)
+}

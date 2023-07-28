@@ -31,22 +31,17 @@ const EditTaskModal = ({ task, onSave }) => {
   return (
     <>
       {/* Button to open the modal */}
-      <span className=" edit-icon bi bi-pencil-square" style={{ fontSize: 20 }} onClick={toggleModal}></span>
+      <span className=" edit-icon bi bi-pencil-square link" style={{ fontSize: 20 }} onClick={toggleModal}></span>
 
       {/* Modal */}
       {isOpen && (
-        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+        <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block', marginTop: '20vh' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Task</h5>
-                <i className=" delete-icon bi bi-x-square" style={{ fontSize: 20 }} onClick={toggleModal}></i>
-              </div>
               <div className="modal-body">
                 {/* Form to edit the task */}
                 <form>
-                  <div className="form-group">
-                    <label htmlFor="summary">Summary</label>
+                  <div className="form-floating m-2">
                     <input
                       type="text"
                       className="form-control"
@@ -57,9 +52,9 @@ const EditTaskModal = ({ task, onSave }) => {
                       onKeyUp={handleKeyPress}
                       autoFocus={true}
                     />
+                    <label htmlFor="summary">Summary</label>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="project">Project</label>
+                  <div className="form-floating m-2">
                     <input
                       type="text"
                       className="form-control"
@@ -69,9 +64,9 @@ const EditTaskModal = ({ task, onSave }) => {
                       onChange={handleInputChange}
                       onKeyUp={handleKeyPress}
                     />
+                    <label htmlFor="project">Project</label>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="tags">Tags</label>
+                  <div className="form-floating m-2">
                     <input
                       type="text"
                       className="form-control"
@@ -81,6 +76,19 @@ const EditTaskModal = ({ task, onSave }) => {
                       onChange={handleInputChange}
                       onKeyUp={handleKeyPress}
                     />
+                    <label htmlFor="tags">Tags</label>
+                  </div>
+                  <div className="form-floating m-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="link"
+                      name="link"
+                      value={editedTask.link}
+                      onChange={handleInputChange}
+                      onKeyUp={handleKeyPress}
+                    />
+                    <label htmlFor="link">Link</label>
                   </div>
                 </form>
               </div>

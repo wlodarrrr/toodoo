@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './../../styles.css'
+import './../../styles.css';
 import EditTaskModal from './EditTaskModal';
 
 const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEdit }) => {
@@ -24,7 +24,10 @@ const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEd
 
         <span className="badge bg-success">{formatDate(task.completionDate)}</span>
 
-        <label className="form-check-label flex-grow-1">{task.summary}</label>
+        <label className="form-check-label">{task.summary}</label>
+
+        {task.link && <a className="bi bi-box-arrow-up-right link flex-grow-1" href={task.link} target="_blank"></a>}
+        {!task.link && <div className="flex-grow-1"></div>}
 
         {task.tags.map((tag) => {
           return (
@@ -32,17 +35,22 @@ const Task = ({ task, completeTask, removeTask, onTagClick, onProjectClick, onEd
               key={tag}
               tag={tag}
               role="button"
-              className="badge bg-primary rounded-pill btn"
+              className="badge btn bg-primary rounded-pill"
               onClick={() => onTagClick(tag)}
             >
               {'@' + tag}
             </span>
           );
         })}
-
-        <span className="badge bg-success rounded-pill btn" role="button" onClick={() => onProjectClick(task.project)}>
-          {(task.project ? '#' : '') + task.project}
-        </span>
+        {task.project && (
+          <span
+            className="badge btn bg-success rounded-pill"
+            role="button"
+            onClick={() => onProjectClick(task.project)}
+          >
+            {task.project}
+          </span>
+        )}
 
         <EditTaskModal task={task} onSave={onEdit} />
 

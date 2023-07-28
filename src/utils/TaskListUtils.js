@@ -6,7 +6,7 @@ export function getAllProjects(tasks) {
   return [
     ...new Set(
       tasks
-        .filter((task) => task.project !== '')
+        .filter((task) => task.project)
         .flatMap((task) => task.project)
         .sort()
     ),
@@ -21,9 +21,9 @@ export function getFilteredTasks(tasks, filterCriteria) {
     const isProjectMatch = selectedProject === '' || selectedProject === task.project;
     const isTagsMatch = selectedTags.every((tag) => task.tags.includes(tag));
 
-    const isSearchTextInSummary = task.summary.toLowerCase().includes(searchText.toLowerCase());
+    const isSearchTextInSummary = task.summary?.toLowerCase().includes(searchText.toLowerCase());
     const isSearchTextInTags = task.tags.some((tag) => tag.toLowerCase().includes(searchText.toLowerCase()));
-    const isSearchTextInProject = task.project.toLowerCase().includes(searchText.toLowerCase());
+    const isSearchTextInProject = task.project?.toLowerCase().includes(searchText.toLowerCase());
 
     return (
       isCompletionMatch &&
