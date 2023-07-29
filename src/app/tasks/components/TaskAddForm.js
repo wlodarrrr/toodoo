@@ -27,7 +27,7 @@ export default function TaskAddForm({ addTask }) {
     <div className="d-flex gap-2 align-items-center ">
       <input
         type="text"
-        className="col h-auto"
+        className="col h-auto form-control "
         placeholder="Add task..."
         value={taskSummary}
         onChange={handleInputChange}
